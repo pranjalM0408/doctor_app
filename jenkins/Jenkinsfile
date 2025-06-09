@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+ 
+    stages {
+        stage('Clone Repo') {
+            steps {
+                echo "Code already cloned by webhook trigger"
+            }
+        }
+ 
+        stage('Install Node Dependencies') {
+            steps {
+                sh '''
+                    cd node_app
+                    npm install
+                '''
+            }
+        }
+ 
+        stage('Restart Node App') {
+            steps {
+                sh '''
+                    pkill node || true
+                    cd node_app
+                    nohup node server.js > output.log 2>&1 &
+                '''
+            }
+        }
+    }
+}
