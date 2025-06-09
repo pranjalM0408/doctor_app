@@ -9,6 +9,21 @@ cidr_block = "10.0.0.0/16"
 resource "aws_subnet" "main_subnet" {
 vpc_id = aws_vpc.main_vpc.id
 cidr_block = "10.0.1.0/24"
+map_public_ip_on_launch = true
+availability_zone = "us-east-1a"
+    tags = {
+        Name = "Public Subnet1"
+    }
+}
+
+resource "aws_subnet" "main_subnet1" {
+  vpc_id = aws_vpc.main_vpc.id
+  cidr_block = "10.0.2.0/24"
+  map_public_ip_on_launch = true
+    availability_zone = "us-east-1b"
+        tags = {
+            Name = "Public Subnet2"
+        }
 }
  
 resource "aws_security_group" "sg" {
@@ -69,4 +84,18 @@ resource "aws_db_instance" "mysql" {
   skip_final_snapshot  = true
   publicly_accessible  = true
 vpc_security_group_ids = [aws_security_group.sg.id]
+    db_subnet_group_name = aws_db_subnet_group.mysql_subnet_group.name
+    
+    tags = {
+        Name = "doctor-appointments-db"
+    }
+}
+
+resource "aws_db_subnet_group" "mysql_subnet_group" {
+  name       = "mysql-subnet-group"
+  subnet_ids = [aws_subnet.main_subnet1.id, aws_subnet.main_subnet2.id]
+ 
+  tags = {
+    Name = "Main DB Subnet Group"
+  }
 }
