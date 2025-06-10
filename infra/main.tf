@@ -90,7 +90,7 @@ vpc_id = aws_vpc.main_vpc.id
  
 resource "aws_instance" "jenkins_instance" {
   ami                         = "ami-0c101f26f147fa7fd" 
-  instance_type               = "t2.micro"
+  instance_type               = "t3.medium"
 subnet_id                     = aws_subnet.main_subnet1.id
 
 vpc_security_group_ids = [aws_security_group.sg.id]
